@@ -1,51 +1,49 @@
-{% extends 'core/base.html' %}
-{% block title %}{{ post.title }} | {% endblock %}
+{% extends 'core/base.html' %} {% block title %}{{ post.title }} | {% endblock%} 
 {% block content %}
-<section class="hero">
-    <div class="hero-body">
-        <div class="container">
-            <section class="section">
-                {% if post.image %}
-                <figure class="image mb-6">
-                    <img src="{{ post.image.url }}">
-                </figure>
-                {% endif %}
-                <div class="columns">
-                    <div class="column is-8 is-offset-2">
-                            <div class="content is-medium">
-                                    <h2 class="subtitle is-4">{{ post.created_at|timesince }} ago</h2>
-                                    <h1 class="title">{{ post.title }}</h1>
-                                    <p><strong>{{ post.intro }}</strong></p>
-                                    <p>{{ post.body }}</p>
-                                    <p><small>Category: <a href="{% url 'category_detail' post.category.slug %}">{{ post.category }}</a></small></p>
-                                    <hr/>
-                                    <h2 class="subtitle is-4">Comments</h2>
-                                    <form method="post" class="mb-6">
-                                        {% csrf_token %}
-                                        {{ form_comment.as_p }}
-                                        <div class="field">
-                                            <div class="control">
-                                                <button class="button is-success">Submit Comment</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    
-                                    {% comment %} post.comments.all from ForeignKey in models {% endcomment %}
-                                    {% for comment in post.comments.all %}
-                                        <article class="media box">
-                                            <div class="media-content">
-                                                <strong>{{ comment.name }}</strong>
-                                                <small>{{ comment.created_at|timesince }} ago</small>
-                                                <br>
-                                                {{ comment.body }}
-                                            </div>
-                                        </article>
-                                    {% endfor %}
-                            </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+<div class="blog-post">
+  {% if post.image %}
+  <div style="margin-bottom:30px;">
+    <img src="{{ post.image.url }}" class="img-fluid" />
+  </div>
+  {% endif %}
+  <h2 class="blog-post-title">{{ post.title }}</h2>
+  <p class="blog-post-meta">{{ post.created_at }} by <a href="#">Yusuf</a></p>
+  <p>{{ post.body }}</p>
+  <p>
+    <small
+      >Category:
+      <a href="{% url 'category_detail' post.category.slug %}"
+        >{{ post.category }}</a
+      ></small
+    >
+  </p>
+  <hr />
+  <h2 class="subtitle is-4">Comments</h2>
+  {% load crispy_forms_tags %}  
+  <form method="post" class="my-class" style="margin-bottom:30px;">
+    {% csrf_token %} 
+    {{ form_comment|crispy }}
+    {% comment %} {{ form_comment.as_p }} {% endcomment %}
+
+    <div class="field">
+      <div class="control">
+        <button class="btn btn-outline-primary">Submit Comment</button>
+      </div>
     </div>
-</section>
+  </form>
+
+  {% comment %} post.comments.all from ForeignKey in models {% endcomment %} 
+  {% for comment in post.comments.all %}
+  <div class="alert alert-primary" role="alert">
+      <strong>{{ comment.name }}</strong>
+      <small>{{ comment.created_at|timesince }} ago</small>
+      <br />
+      {{ comment.body }}
+    </div>
+  {% endfor %}
+</div>
+<nav class="blog-pagination">
+  <a class="btn btn-outline-primary" href="#">Older</a>
+  <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
+</nav>
 {% endblock %}

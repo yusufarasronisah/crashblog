@@ -3,31 +3,24 @@
     Home |
 {% endblock %}
 {% block content %}
-<section class="hero">
-    <div class="hero-body">
-        <div class="container">
-            <section class="section">
-                <div class="columns">
-                    <div class="column is-8 is-offset-2">
-                        {% for post in posts %}
-                            <div class="content is-medium">
-                               <a href="{% url 'post_detail' post.category.slug post.slug %}">
-                                    {% if post.image %}
-                                        <figure class="image">
-                                            <img src="{{ post.image.url }}">
-                                        </figure>
-                                    {% endif %}
+<div class="infinite-container">
+{% for post in numbers %}
+<div class="blog-post infinite-item">
+    <h3>{{ post.title }}</h3>
+    <p class="blog-post-meta">{{ post.created_at }} by <a href="#">Yusuf</a></p>
+    <p>{{ post.intro }}</p>
+    <a href="{% url 'post_detail' post.category.slug post.slug %}">Continue reading</a>
+  </div>
+{% endfor %}
 
-                                    <h2 class="subtitle is-4">{{ post.created_at|timesince }} ago</h2>
-                                    <h1 class="title">{{ post.title }}</h1>
-                                    <p>{{ post.intro }}</p>
-                                </a>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</section>
+
+</div>
+  <nav class="blog-pagination">
+    {% if numbers.has_previous %}
+    <a class="btn btn-outline-danger" href="?page={{ numbers.previous_page_number }}">Previous</a>
+    {% endif %}
+    {% if numbers.has_next %}
+    <a class="btn btn-outline-primary" href="?page={{ numbers.next_page_number }}">Next</a>
+    {% endif %}
+  </nav>
 {% endblock %}
